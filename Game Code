@@ -1,0 +1,1312 @@
+import pygame,sys,random,time
+
+mainClock = pygame.time.Clock()
+from pygame.locals import *
+
+pygame.init()
+
+mes = pygame.image.load("Narrative Form.png")
+
+# Global variable to store the volume level
+volume = 1.0
+
+screen = pygame.display.set_mode((500, 700))
+pygame.display.set_caption("Image Button Example")
+bg = pygame.image.load("Snake Ig Background (1).png")
+
+def show_pop_up_for_seconds(img, seconds):
+    start_time = time.time()
+    while time.time() - start_time < seconds:
+        screen.blit(mes, (0, 0))  # Adjust the position as needed
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN and event.key == K_ESCAPE:
+                return  # Exit pop-up display on ESC key
+show_pop_up_for_seconds(mes, 8)
+
+text_font = pygame.font.Font("PressStart2P-vaV7.ttf", 25)
+def draw_text(text, font, text_col, x, y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
+def main_menu():
+    click = False
+    while True:
+        screen.blit(bg, (0, 0))  # Redraw the main menu background
+
+        draw_text("Mis", text_font, (0, 0, 0), 418, 275)
+        draw_text("Set", text_font, (0, 0, 0), 425, 60)
+        draw_text("Rules", text_font, (0, 0, 0), 16, 75)
+
+        mx, my = pygame.mouse.get_pos()
+
+        button_1_img = pygame.image.load("start.png")  # Load your image for button 1
+        button_2_img = pygame.image.load("scroll.png")  # Load your image for button 2
+        button_3_img = pygame.image.load("Settings.png")  # Load your image for button 3
+        button_4_img = pygame.image.load("Menu.png")  # Load your image for button 4
+
+        button_1_rect = button_1_img.get_rect(topleft=(100, 450))  # Set the position of button 1
+        button_2_rect = button_2_img.get_rect(topleft=(425, 200))  # Set the position of button 2
+        button_3_rect = button_3_img.get_rect(topleft=(425, 3))  # Set the position of button 3
+        button_4_rect = button_4_img.get_rect(topleft=(25, 2))  # Set the position of button 4
+
+        screen.blit(button_1_img, button_1_rect)
+        screen.blit(button_2_img, button_2_rect)
+        screen.blit(button_3_img, button_3_rect)
+        screen.blit(button_4_img, button_4_rect)
+
+        click = False
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+
+        if button_1_rect.collidepoint((mx, my)):
+            if click:
+                level_select()
+        if button_2_rect.collidepoint((mx, my)):
+            if click:
+                scroll()
+        if button_3_rect.collidepoint((mx, my)):
+            if click:
+                settings()
+        if button_4_rect.collidepoint((mx, my)):
+            if click:
+                rules()
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+def level_1():
+    press_sfx = pygame.mixer.Sound("press_sound effect.mp3")
+    walkRight = [pygame.image.load('R1.png'), pygame.image.load('R2.png'), pygame.image.load('R3.png'),
+                 pygame.image.load('R4.png'), pygame.image.load('R5.png'), pygame.image.load('R6.png'),
+                 pygame.image.load('R7.png'), pygame.image.load('R8.png'), pygame.image.load('R9.png')]
+    walkLeft = [pygame.image.load('L1.png'), pygame.image.load('L2.png'), pygame.image.load('L3.png'),
+                pygame.image.load('L4.png'), pygame.image.load('L5.png'), pygame.image.load('L6.png'),
+                pygame.image.load('L7.png'), pygame.image.load('L8.png'), pygame.image.load('L9.png')]
+    walkUp = [pygame.image.load('UP1.png'), pygame.image.load('UP2.png'), pygame.image.load('UP3.png'),
+              pygame.image.load('UP4.png'), pygame.image.load('UP5.png'), pygame.image.load('UP6.png'),
+              pygame.image.load('UP7.png'), pygame.image.load('UP8.png'), pygame.image.load('UP9.png')]
+    walkDown = [pygame.image.load('DOWN1.png'), pygame.image.load('DOWN2.png'), pygame.image.load('DOWN3.png'),
+                pygame.image.load('DOWN4.png'), pygame.image.load('DOWN5.png'), pygame.image.load('DOWN6.png'),
+                pygame.image.load('DOWN7.png'), pygame.image.load('DOWN8.png'), pygame.image.load('DOWN9.png')]
+    bg = pygame.image.load('Game background.png')
+    snake_background = pygame.image.load('Snake background.png')
+    char = pygame.image.load('L9.png')
+
+    letters_imgs = {
+        "A": pygame.image.load("Letter A.png"),
+        "B": pygame.image.load("Letter B.png"),
+        "C": pygame.image.load("Letter C.png"),
+        "D": pygame.image.load("Letter D.png"),
+        "E": pygame.image.load("Letter E.png"),
+        "F": pygame.image.load("Letter F.png"),
+        "G": pygame.image.load("Letter G.png"),
+        "H": pygame.image.load("Letter H.png"),
+        "I": pygame.image.load("Letter I.png"),
+        "J": pygame.image.load("Letter J.png"),
+        "K": pygame.image.load("Letter K.png"),
+        "L": pygame.image.load("Letter L.png"),
+        "M": pygame.image.load("Letter M.png"),
+        "N": pygame.image.load("Letter N.png"),
+        "O": pygame.image.load("Letter O.png"),
+        "P": pygame.image.load("Letter P.png"),
+        "Q": pygame.image.load("Letter Q.png"),
+        "R": pygame.image.load("Letter R.png"),
+        "S": pygame.image.load("Letter S.png"),
+        "T": pygame.image.load("Letter T.png"),
+        "U": pygame.image.load("Letter U.png"),
+        "V": pygame.image.load("Letter V.png"),
+        "W": pygame.image.load("Letter W.png"),
+        "X": pygame.image.load("Letter X.png"),
+        "Y": pygame.image.load("Letter Y.png"),
+        "Z": pygame.image.load("Letter Z.png"),
+    }
+
+
+    list_of_popups = {
+        "MOLECULE": pygame.image.load("Molecule Pop-Up.png"),
+        "COMPOUND": pygame.image.load("Compound Pop Up.png"),
+        "CHEMICAL": pygame.image.load("Chemical Pop Up.png"),
+        "SOLVENT": pygame.image.load("Solvent Pop Up.png"),
+        "REACTANT": pygame.image.load("Reactant Pop Up.png"),
+    }
+
+    class Enemy:
+        def __init__(self, x, y, width, height, img):
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+            self.img = img
+            self.rect = pygame.Rect(x, y, width, height)
+
+        def draw(self, win):
+            win.blit(self.img, (self.x, self.y))
+
+    # Function to redraw the game window
+    def redrawGameWindow():
+        global walkCount
+
+        win.blit(bg, (0, 0))
+        win.blit(snake_background, (0, 0))
+
+        # Increment walkCount for animation
+        if left or right or up or down:
+            if walkCount + 1 >= 27:
+                walkCount = 0
+            else:
+                walkCount += 1
+        else:
+            walkCount = 0
+
+        if left:
+            win.blit(walkLeft[walkCount // 3], (x, y))
+        elif right:
+            win.blit(walkRight[walkCount // 3], (x, y))
+        elif up:
+            win.blit(walkUp[walkCount // 3], (x, y))
+        elif down:
+            win.blit(walkDown[walkCount // 3], (x, y))
+        else:
+            win.blit(char, (x, y))
+
+        enemy.draw(win)  # Draw the enemy
+        pygame.display.update()
+
+    # Function to display the pop-up for a few seconds
+    def show_pop_up_for_seconds(img, seconds):
+        start_time = time.time()
+        while time.time() - start_time < seconds:
+            screen.blit(img, (50, 50))  # Adjust the position as needed
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    return  # Exit pop-up display on ESC key
+
+    x = 50
+    y = 500
+    width = 40
+    height = 60
+    vel = 5
+    # List to keep track of collected letters
+    collected_letters = []
+
+    # List of words
+    words = ["MOLECULE", "COMPOUND", "CHEMICAL", "SOLVENT", "REACTANT"]
+
+    # Initialize index for the current word
+    word_index = 0
+
+    # Initial enemy (letter) position
+    enemy_x = random.randint(50, 240)
+    enemy_y = random.randint(150, 499)
+
+    # Create the first enemy with the first letter of the word
+    enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][0]])
+
+    clock = pygame.time.Clock()
+
+    isJump = False
+    jumpCount = 10
+
+    left = False
+    right = False
+    up = False
+    down = False
+    walkCount = 0
+
+    win = pygame.display.set_mode((500, 700))
+    pygame.display.set_caption("First Game")
+
+    run = True
+
+    while run:
+        clock.tick(27)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and x > 45:
+            x -= vel
+            left = True
+            right = False
+            up = False
+            down = False
+        elif keys[pygame.K_RIGHT] and x < 450 - vel - height:
+            x += vel
+            left = False
+            right = True
+            up = False
+            down = False
+        elif keys[pygame.K_UP] and y < 610 - vel - width:
+            y -= vel
+            left = False
+            right = False
+            up = True
+            down = False
+        elif keys[pygame.K_DOWN] and y < 620 - vel - width:
+            y += vel
+            left = False
+            right = False
+            up = False
+            down = True
+        else:
+            left = False
+            right = False
+            up = False
+            down = False
+            walkCount = 0
+
+        if not isJump:
+            if keys[pygame.K_SPACE]:
+                isJump = True
+                left = False
+                right = False
+                walkCount = 0
+        else:
+            if jumpCount >= -10:
+                y -= (jumpCount * abs(jumpCount)) * 0.5
+                jumpCount -= 1
+            else:
+                jumpCount = 10
+                isJump = False
+
+        # Check for collision between player and enemy
+        player_rect = pygame.Rect(x, y, width, height)
+        if player_rect.colliderect(enemy.rect):
+            press_sfx.play()
+            collected_letters.append(words[word_index][len(collected_letters)])
+
+            # If all letters of the word are collected, move to the next word
+            if len(collected_letters) == len(words[word_index]):
+                # Show the corresponding pop-up for 2 seconds using the list_of_popups dictionary
+                show_pop_up_for_seconds(list_of_popups[words[word_index]], 2)
+                collected_letters.clear()
+                word_index = (word_index + 1) % len(words)
+
+            # Spawn the next letter of the word
+            if len(collected_letters) < len(words[word_index]):
+                enemy_x = random.randint(50, 240)
+                enemy_y = random.randint(150, 499)
+                enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][len(collected_letters)]])
+     
+        redrawGameWindow()
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if collected_letters == ['R','E','A','C','T','A','N',]:
+                    run = False
+
+                    W = pygame.image.load("Winner.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(W, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(W, 2)
+                    level_select()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    run = False
+
+                    L = pygame.image.load("Loser.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(L, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(L, 2)
+                    level_select()
+
+    pygame.quit()
+
+
+
+def level_2():
+    press_sfx = pygame.mixer.Sound("press_sound effect.mp3")
+    walkRight = [pygame.image.load('R1.png'), pygame.image.load('R2.png'), pygame.image.load('R3.png'),
+                 pygame.image.load('R4.png'), pygame.image.load('R5.png'), pygame.image.load('R6.png'),
+                 pygame.image.load('R7.png'), pygame.image.load('R8.png'), pygame.image.load('R9.png')]
+    walkLeft = [pygame.image.load('L1.png'), pygame.image.load('L2.png'), pygame.image.load('L3.png'),
+                pygame.image.load('L4.png'), pygame.image.load('L5.png'), pygame.image.load('L6.png'),
+                pygame.image.load('L7.png'), pygame.image.load('L8.png'), pygame.image.load('L9.png')]
+    walkUp = [pygame.image.load('UP1.png'), pygame.image.load('UP2.png'), pygame.image.load('UP3.png'),
+              pygame.image.load('UP4.png'), pygame.image.load('UP5.png'), pygame.image.load('UP6.png'),
+              pygame.image.load('UP7.png'), pygame.image.load('UP8.png'), pygame.image.load('UP9.png')]
+    walkDown = [pygame.image.load('DOWN1.png'), pygame.image.load('DOWN2.png'), pygame.image.load('DOWN3.png'),
+                pygame.image.load('DOWN4.png'), pygame.image.load('DOWN5.png'), pygame.image.load('DOWN6.png'),
+                pygame.image.load('DOWN7.png'), pygame.image.load('DOWN8.png'), pygame.image.load('DOWN9.png')]
+    bg = pygame.image.load('Game background.png')
+    snake_background = pygame.image.load('Snake background.png')
+    char = pygame.image.load('L9.png')
+
+    letters_imgs = {
+        "A": pygame.image.load("Letter A.png"),
+        "B": pygame.image.load("Letter B.png"),
+        "C": pygame.image.load("Letter C.png"),
+        "D": pygame.image.load("Letter D.png"),
+        "E": pygame.image.load("Letter E.png"),
+        "F": pygame.image.load("Letter F.png"),
+        "G": pygame.image.load("Letter G.png"),
+        "H": pygame.image.load("Letter H.png"),
+        "I": pygame.image.load("Letter I.png"),
+        "J": pygame.image.load("Letter J.png"),
+        "K": pygame.image.load("Letter K.png"),
+        "L": pygame.image.load("Letter L.png"),
+        "M": pygame.image.load("Letter M.png"),
+        "N": pygame.image.load("Letter N.png"),
+        "O": pygame.image.load("Letter O.png"),
+        "P": pygame.image.load("Letter P.png"),
+        "Q": pygame.image.load("Letter Q.png"),
+        "R": pygame.image.load("Letter R.png"),
+        "S": pygame.image.load("Letter S.png"),
+        "T": pygame.image.load("Letter T.png"),
+        "U": pygame.image.load("Letter U.png"),
+        "V": pygame.image.load("Letter V.png"),
+        "W": pygame.image.load("Letter W.png"),
+        "X": pygame.image.load("Letter X.png"),
+        "Y": pygame.image.load("Letter Y.png"),
+        "Z": pygame.image.load("Letter Z.png"),
+    }
+
+    # Load the pop-up image
+    pop_up_img = pygame.image.load("Molecule Pop-Up.png")
+
+    list_of_popups = {
+        "DISTILLATION": pygame.image.load("DISTILLATION POP UP.png"),
+        "SUBLIMATION": pygame.image.load("SUBLIMATION POP UP.png"),
+        "EQUILIBRIUM": pygame.image.load("EQUILIBRIUM POP UP.png"),
+        "SOLUBILITY": pygame.image.load("SOLUBILITY POP UP.png"),
+        "CONDENSATION": pygame.image.load("CONDENSATION POP UP.png"),
+    }
+
+    class Enemy:
+        def __init__(self, x, y, width, height, img):
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+            self.img = img
+            self.rect = pygame.Rect(x, y, width, height)
+
+        def draw(self, win):
+            win.blit(self.img, (self.x, self.y))
+
+    # Function to redraw the game window
+    def redrawGameWindow():
+        global walkCount
+
+        win.blit(bg, (0, 0))
+        win.blit(snake_background, (0, 0))
+
+        # Increment walkCount for animation
+        if left or right or up or down:
+            if walkCount + 1 >= 27:
+                walkCount = 0
+            else:
+                walkCount += 1
+        else:
+            walkCount = 0
+
+        if left:
+            win.blit(walkLeft[walkCount // 3], (x, y))
+        elif right:
+            win.blit(walkRight[walkCount // 3], (x, y))
+        elif up:
+            win.blit(walkUp[walkCount // 3], (x, y))
+        elif down:
+            win.blit(walkDown[walkCount // 3], (x, y))
+        else:
+            win.blit(char, (x, y))
+
+        enemy.draw(win)  # Draw the enemy
+        pygame.display.update()
+
+    # Function to display the pop-up for a few seconds
+    def show_pop_up_for_seconds(img, seconds):
+        start_time = time.time()
+        while time.time() - start_time < seconds:
+            screen.blit(img, (50, 50))  # Adjust the position as needed
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    return  # Exit pop-up display on ESC key
+
+    x = 50
+    y = 500
+    width = 40
+    height = 60
+    vel = 5
+    # List to keep track of collected letters
+    collected_letters = []
+
+    # List of words
+    words = ["DISTILLATION", "SUBLIMATION", "EQUILIBRIUM", "SOLUBILITY", "CONDENSATION"]
+
+    # Initialize index for the current word
+    word_index = 0
+
+    # Initial enemy (letter) position
+    enemy_x = random.randint(50, 240)
+    enemy_y = random.randint(150, 499)
+
+    # Create the first enemy with the first letter of the word
+    enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][0]])
+
+    clock = pygame.time.Clock()
+
+    isJump = False
+    jumpCount = 10
+
+    left = False
+    right = False
+    up = False
+    down = False
+    walkCount = 0
+
+    win = pygame.display.set_mode((500, 700))
+    pygame.display.set_caption("First Game")
+
+    run = True
+
+    while run:
+        clock.tick(27)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and x > 45:
+            x -= vel
+            left = True
+            right = False
+            up = False
+            down = False
+        elif keys[pygame.K_RIGHT] and x < 450 - vel - height:
+            x += vel
+            left = False
+            right = True
+            up = False
+            down = False
+        elif keys[pygame.K_UP] and y < 610 - vel - width:
+            y -= vel
+            left = False
+            right = False
+            up = True
+            down = False
+        elif keys[pygame.K_DOWN] and y < 620 - vel - width:
+            y += vel
+            left = False
+            right = False
+            up = False
+            down = True
+        else:
+            left = False
+            right = False
+            up = False
+            down = False
+            walkCount = 0
+
+        if not isJump:
+            if keys[pygame.K_SPACE]:
+                isJump = True
+                left = False
+                right = False
+                walkCount = 0
+        else:
+            if jumpCount >= -10:
+                y -= (jumpCount * abs(jumpCount)) * 0.5
+                jumpCount -= 1
+            else:
+                jumpCount = 10
+                isJump = False
+
+        # Check for collision between player and enemy
+        player_rect = pygame.Rect(x, y, width, height)
+        if player_rect.colliderect(enemy.rect):
+            press_sfx.play()
+            collected_letters.append(words[word_index][len(collected_letters)])
+
+            # If all letters of the word are collected, move to the next word
+            if len(collected_letters) == len(words[word_index]):
+                # Show the corresponding pop-up for 2 seconds using the list_of_popups dictionary
+                show_pop_up_for_seconds(list_of_popups[words[word_index]], 2)
+                collected_letters.clear()
+                word_index = (word_index + 1) % len(words)
+
+            # Spawn the next letter of the word
+            if len(collected_letters) < len(words[word_index]):
+                enemy_x = random.randint(50, 240)
+                enemy_y = random.randint(150, 499)
+                enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][len(collected_letters)]])
+
+        redrawGameWindow()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if collected_letters == ['C', 'O', 'N', 'D', 'E', 'N', 'S','A','T','I','O']:
+                    run = False
+
+                    W = pygame.image.load("Winner.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(W, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(W, 2)
+                    level_select()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    run = False
+
+                    L = pygame.image.load("Loser.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(L, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(L, 2)
+                    level_select()
+
+    pygame.quit()
+
+def level_3():
+    press_sfx = pygame.mixer.Sound("press_sound effect.mp3")
+    walkRight = [pygame.image.load('R1.png'), pygame.image.load('R2.png'), pygame.image.load('R3.png'),
+                 pygame.image.load('R4.png'), pygame.image.load('R5.png'), pygame.image.load('R6.png'),
+                 pygame.image.load('R7.png'), pygame.image.load('R8.png'), pygame.image.load('R9.png')]
+    walkLeft = [pygame.image.load('L1.png'), pygame.image.load('L2.png'), pygame.image.load('L3.png'),
+                pygame.image.load('L4.png'), pygame.image.load('L5.png'), pygame.image.load('L6.png'),
+                pygame.image.load('L7.png'), pygame.image.load('L8.png'), pygame.image.load('L9.png')]
+    walkUp = [pygame.image.load('UP1.png'), pygame.image.load('UP2.png'), pygame.image.load('UP3.png'),
+              pygame.image.load('UP4.png'), pygame.image.load('UP5.png'), pygame.image.load('UP6.png'),
+              pygame.image.load('UP7.png'), pygame.image.load('UP8.png'), pygame.image.load('UP9.png')]
+    walkDown = [pygame.image.load('DOWN1.png'), pygame.image.load('DOWN2.png'), pygame.image.load('DOWN3.png'),
+                pygame.image.load('DOWN4.png'), pygame.image.load('DOWN5.png'), pygame.image.load('DOWN6.png'),
+                pygame.image.load('DOWN7.png'), pygame.image.load('DOWN8.png'), pygame.image.load('DOWN9.png')]
+    bg = pygame.image.load('Game background.png')
+    snake_background = pygame.image.load('Snake background.png')
+    char = pygame.image.load('L9.png')
+
+    letters_imgs = {
+        "A": pygame.image.load("Letter A.png"),
+        "B": pygame.image.load("Letter B.png"),
+        "C": pygame.image.load("Letter C.png"),
+        "D": pygame.image.load("Letter D.png"),
+        "E": pygame.image.load("Letter E.png"),
+        "F": pygame.image.load("Letter F.png"),
+        "G": pygame.image.load("Letter G.png"),
+        "H": pygame.image.load("Letter H.png"),
+        "I": pygame.image.load("Letter I.png"),
+        "J": pygame.image.load("Letter J.png"),
+        "K": pygame.image.load("Letter K.png"),
+        "L": pygame.image.load("Letter L.png"),
+        "M": pygame.image.load("Letter M.png"),
+        "N": pygame.image.load("Letter N.png"),
+        "O": pygame.image.load("Letter O.png"),
+        "P": pygame.image.load("Letter P.png"),
+        "Q": pygame.image.load("Letter Q.png"),
+        "R": pygame.image.load("Letter R.png"),
+        "S": pygame.image.load("Letter S.png"),
+        "T": pygame.image.load("Letter T.png"),
+        "U": pygame.image.load("Letter U.png"),
+        "V": pygame.image.load("Letter V.png"),
+        "W": pygame.image.load("Letter W.png"),
+        "X": pygame.image.load("Letter X.png"),
+        "Y": pygame.image.load("Letter Y.png"),
+        "Z": pygame.image.load("Letter Z.png"),
+    }
+
+    # Load the pop-up image
+    pop_up_img = pygame.image.load("Molecule Pop-Up.png")
+
+    list_of_popups = {
+        "EXOTHERMIC": pygame.image.load("EXOTHERMIC POP UP.png"),
+        "KETONE": pygame.image.load("KETONE POP UP.png"),
+        "LIGAND": pygame.image.load("LIGAND POP UP.png"),
+        "RADIOACTIVITY": pygame.image.load("RADIOACTIVITY POP UP.png"),
+        "THERMODYNAMICS": pygame.image.load("THERMODYNAMICS POP UP.png"),
+    }
+
+    class Enemy:
+        def __init__(self, x, y, width, height, img):
+            self.x = x
+            self.y = y
+            self.width = width
+            self.height = height
+            self.img = img
+            self.rect = pygame.Rect(x, y, width, height)
+
+        def draw(self, win):
+            win.blit(self.img, (self.x, self.y))
+
+    # Function to redraw the game window
+    def redrawGameWindow():
+        global walkCount
+
+        win.blit(bg, (0, 0))
+        win.blit(snake_background, (0, 0))
+
+        # Increment walkCount for animation
+        if left or right or up or down:
+            if walkCount + 1 >= 27:
+                walkCount = 0
+            else:
+                walkCount += 1
+        else:
+            walkCount = 0
+
+        if left:
+            win.blit(walkLeft[walkCount // 3], (x, y))
+        elif right:
+            win.blit(walkRight[walkCount // 3], (x, y))
+        elif up:
+            win.blit(walkUp[walkCount // 3], (x, y))
+        elif down:
+            win.blit(walkDown[walkCount // 3], (x, y))
+        else:
+            win.blit(char, (x, y))
+
+        enemy.draw(win)  # Draw the enemy
+        pygame.display.update()
+
+    # Function to display the pop-up for a few seconds
+    def show_pop_up_for_seconds(img, seconds):
+        start_time = time.time()
+        while time.time() - start_time < seconds:
+            screen.blit(img, (50, 50))  # Adjust the position as needed
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    return  # Exit pop-up display on ESC key
+
+    x = 50
+    y = 500
+    width = 40
+    height = 60
+    vel = 5
+    # List to keep track of collected letters
+    collected_letters = []
+
+    # List of words
+    words = ["EXOTHERMIC", "KETONE", "LIGAND", "RADIOACTIVITY", "THERMODYNAMICS"]
+
+    # Initialize index for the current word
+    word_index = 0
+
+    # Initial enemy (letter) position
+    enemy_x = random.randint(50, 240)
+    enemy_y = random.randint(150, 499)
+
+    # Create the first enemy with the first letter of the word
+    enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][0]])
+
+    clock = pygame.time.Clock()
+
+    isJump = False
+    jumpCount = 10
+
+    left = False
+    right = False
+    up = False
+    down = False
+    walkCount = 0
+
+    win = pygame.display.set_mode((500, 700))
+    pygame.display.set_caption("First Game")
+
+    run = True
+
+    while run:
+        clock.tick(27)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and x > 45:
+            x -= vel
+            left = True
+            right = False
+            up = False
+            down = False
+        elif keys[pygame.K_RIGHT] and x < 450 - vel - height:
+            x += vel
+            left = False
+            right = True
+            up = False
+            down = False
+        elif keys[pygame.K_UP] and y < 610 - vel - width:
+            y -= vel
+            left = False
+            right = False
+            up = True
+            down = False
+        elif keys[pygame.K_DOWN] and y < 620 - vel - width:
+            y += vel
+            left = False
+            right = False
+            up = False
+            down = True
+        else:
+            left = False
+            right = False
+            up = False
+            down = False
+            walkCount = 0
+
+        if not isJump:
+            if keys[pygame.K_SPACE]:
+                isJump = True
+                left = False
+                right = False
+                walkCount = 0
+        else:
+            if jumpCount >= -10:
+                y -= (jumpCount * abs(jumpCount)) * 0.5
+                jumpCount -= 1
+            else:
+                jumpCount = 10
+                isJump = False
+
+        # Check for collision between player and enemy
+        player_rect = pygame.Rect(x, y, width, height)
+        if player_rect.colliderect(enemy.rect):
+            press_sfx.play()
+            collected_letters.append(words[word_index][len(collected_letters)])
+
+            # If all letters of the word are collected, move to the next word
+            if len(collected_letters) == len(words[word_index]):
+                # Show the corresponding pop-up for 2 seconds using the list_of_popups dictionary
+                show_pop_up_for_seconds(list_of_popups[words[word_index]], 2)
+                collected_letters.clear()
+                word_index = (word_index + 1) % len(words)
+
+            # Spawn the next letter of the word
+            if len(collected_letters) < len(words[word_index]):
+                enemy_x = random.randint(50, 240)
+                enemy_y = random.randint(150, 499)
+                enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][len(collected_letters)]])
+
+        redrawGameWindow()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if collected_letters == ['T', 'H', 'E', 'R', 'M', 'O', 'D', 'Y', 'N', 'A', 'M', 'I', 'C']:
+                    run = False
+
+                    W = pygame.image.load("Winner.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(W, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(W, 2)
+                    level_select()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    run = False
+
+                    L = pygame.image.load("Loser.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(L, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+
+                    show_pop_up_for_seconds(L, 2)
+                    level_select()
+
+    pygame.quit()
+
+def scroll():
+    running = True
+    while running:
+        bg = pygame.image.load("Missions Background.png")
+        screen.blit(bg, (0, 0))
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+                    main_menu()  # Return to the main menu
+def settings():
+    running = True
+    while running:
+        bg = pygame.image.load("Settings_BACKGROUND.png")
+        # Set up colors
+        white = (255, 255, 255)
+        black = (0, 0, 0)
+        gray = (200, 200, 200)
+        green = (0, 255, 0)
+
+        # Load a sound or music
+        pygame.mixer.music.load('chill music.mp3')
+        pygame.mixer.music.play(-1)  # Play the music indefinitely
+
+        class Slider:
+            def __init__(self, x, y, width, height):
+                self.rect = pygame.Rect(x, y, width, height)
+                self.handle_rect = pygame.Rect(x, y, height, height)  # Square handle
+                self.dragging = False
+
+            def draw(self, screen):
+                # Draw track
+                pygame.draw.rect(screen, gray, self.rect)
+                # Draw handle
+                pygame.draw.rect(screen, green if self.dragging else white, self.handle_rect)
+
+            def handle_event(self, event):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.handle_rect.collidepoint(event.pos):
+                        self.dragging = True
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    self.dragging = False
+                elif event.type == pygame.MOUSEMOTION:
+                    if self.dragging:
+                        # Move handle within bounds of track
+                        new_x = max(self.rect.x, min(event.pos[0] - self.handle_rect.width // 2,
+                                                     self.rect.x + self.rect.width - self.handle_rect.width))
+                        self.handle_rect.x = new_x
+
+            def get_volume(self):
+                # Calculate volume as a value between 0.0 and 1.0
+                return (self.handle_rect.x - self.rect.x) / (self.rect.width - self.handle_rect.width)
+
+        slider = Slider(100, 300, 300, 20)
+
+        def main():
+            text_font = pygame.font.Font("PressStart2P-vaV7.ttf", 25)
+
+            def draw_text(text, font, text_col, x, y):
+                img = font.render(text, True, text_col)
+                screen.blit(img, (x, y))
+            running = True
+            while running:
+                screen.blit(bg, (0, 0))
+                draw_text("Volume", text_font, (0, 0, 0), 185, 350)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        main_menu()
+                        running = False
+
+                    slider.handle_event(event)
+
+                # Draw the slider
+                slider.draw(screen)
+
+                # Get the current volume from the slider
+                volume = slider.get_volume()
+                pygame.mixer.music.set_volume(volume)
+
+                pygame.display.flip()
+
+            pygame.quit()
+            sys.exit()
+
+        if __name__ == "__main__":
+            main()
+def rules():
+    running = True
+    while running:
+        screen.fill((0, 0, 0))  # Clear the screen
+        bg = pygame.image.load("Scroll Background.png")
+        screen.blit(bg, (0, 0))
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+                    main_menu()  # Return to the main menu
+def level_select():
+    def main():
+        running = True
+        screen_width = 500
+        screen_height = 700
+        screen = pygame.display.set_mode((screen_width, screen_height))
+        pygame.display.set_caption("Button Example")
+        bg = pygame.image.load("Def bg.png")
+        screen.blit(bg, (0, 0))
+        pygame.display.flip()
+        def show_pop_up_for_seconds(img, seconds):
+            start_time = time.time()
+            while time.time() - start_time < seconds:
+                win.blit(img, (50, 50))  # Adjust the position as needed
+                pygame.display.update()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == KEYDOWN and event.key == K_ESCAPE:
+                        return  # Exit pop-up display on ESC key
+
+        while running:
+            # Colors
+            black = (0, 0, 0)
+
+            # Fonts
+            font = pygame.font.Font(None, 36)
+
+            # Button class
+            class Button:
+                def __init__(self, x, y, width, height, color, text):
+                    self.rect = pygame.Rect(x, y, width, height)
+                    self.color = color
+                    self.text = text
+                    self.font = font
+
+                def draw(self, screen):
+                    pygame.draw.rect(screen, self.color, self.rect)
+                    text_surface = self.font.render(self.text, True, black)
+                    text_rect = text_surface.get_rect(center=self.rect.center)
+                    screen.blit(text_surface, text_rect)
+
+                def is_clicked(self, event):
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if self.rect.collidepoint(event.pos):
+                            return True
+                    return False
+            # Create a button instance
+            button1 = Button(150, 200, 200, 50, (0, 255, 0), "Level 1")
+            button2 = Button(150, 300, 200, 50, (255, 255, 0), "Level 2")
+            button3 = Button(150, 400, 200, 50, (255, 0, 0), "Level 3")
+            button4 = Button(150, 500, 200, 50, (255, 215, 0), "Finished")
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                if button1.is_clicked(event):
+                    level_1()
+                if button2.is_clicked(event):
+                    level_2()
+                if button3.is_clicked(event):
+                    level_3()
+                if button4.is_clicked(event):
+
+                    # Screen dimensions
+                    screen_width = 500
+                    screen_height = 700
+                    screen = pygame.display.set_mode((screen_width, screen_height))
+                    pygame.display.set_caption("Button Example")
+                    bg = pygame.image.load("Def bg.png")
+
+                    con = pygame.image.load("Congrats.png")
+
+                    def show_pop_up_for_seconds(img, seconds):
+                        start_time = time.time()
+                        while time.time() - start_time < seconds:
+                            screen.blit(con, (0, 0))  # Adjust the position as needed
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+                                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                                    return  # Exit pop-up display on ESC key
+                    show_pop_up_for_seconds(con, 5)
+
+                    # Colors
+                    white = (255, 255, 255)
+                    black = (0, 0, 0)
+                    gray = (200, 200, 200)
+                    green = (0, 255, 0)
+
+                    # Fonts
+                    font = pygame.font.Font(None, 36)
+
+                    # Button class
+                    class Button:
+                        def __init__(self, x, y, width, height, text):
+                            self.rect = pygame.Rect(x, y, width, height)
+                            self.color = gray
+                            self.text = text
+                            self.font = font
+
+                        def draw(self, screen):
+                            pygame.draw.rect(screen, self.color, self.rect)
+                            text_surface = self.font.render(self.text, True, black)
+                            text_rect = text_surface.get_rect(center=self.rect.center)
+                            screen.blit(text_surface, text_rect)
+
+                        def is_clicked(self, event):
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                if self.rect.collidepoint(event.pos):
+                                    return True
+                            return False
+
+                    # Create a button instance
+                    button1 = Button(150, 200, 200, 50, "Level 1")
+                    button2 = Button(150, 300, 200, 50, "Level 2")
+                    button3 = Button(150, 400, 200, 50, "Level 3")
+
+                    def main():
+                        running = True
+                        while running:
+                            screen.blit(bg, (0, 0))
+
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    pygame.quit()
+                                    sys.exit()
+
+                                def Level_1():
+                                    # Create a button instance
+                                    button1 = Button(10, 90, 110, 25, "Molecule")
+                                    button2 = Button(45, 1, 130, 25, "Compound")
+                                    button3 = Button(200, 1, 120, 25, "Chemical")
+                                    button4 = Button(350, 1, 100, 25, "Solvent")
+                                    button5 = Button(390, 90, 105, 25, "Reactant")
+
+                                    def1 = pygame.image.load("L1D1.png")
+                                    def2 = pygame.image.load("L1D2.png")
+                                    def3 = pygame.image.load("L1D3.png")
+                                    def4 = pygame.image.load("L1D4.png")
+                                    def5 = pygame.image.load("L1D5.png")
+
+                                    def m():
+                                        running = True
+                                        while running:
+
+                                            for event in pygame.event.get():
+                                                if event.type == pygame.QUIT:
+                                                    pygame.quit()
+                                                    sys.exit()
+                                                if event.type == KEYDOWN:
+                                                    if event.key == K_ESCAPE:
+                                                        running = False
+                                                        main()
+
+                                                if button1.is_clicked(event):
+                                                    screen.blit(def1, (0, 0))
+                                                if button2.is_clicked(event):
+                                                    screen.blit(def2, (0, 0))
+                                                if button3.is_clicked(event):
+                                                    screen.blit(def3, (0, 0))
+                                                if button4.is_clicked(event):
+                                                    screen.blit(def4, (0, 0))
+                                                if button5.is_clicked(event):
+                                                    screen.blit(def5, (0, 0))
+
+                                            button1.draw(screen)
+                                            button2.draw(screen)
+                                            button3.draw(screen)
+                                            button4.draw(screen)
+                                            button5.draw(screen)
+                                            pygame.display.flip()
+
+                                    if __name__ == "__main__":
+                                        m()
+
+                                def Level_2():
+                                    # Create a button instance
+                                    button1 = Button(20, 115, 140, 25, "Distillation")
+                                    button2 = Button(30, 1, 150, 25, "Sublimation")
+                                    button3 = Button(200, 1, 140, 25, "Equilibrium")
+                                    button4 = Button(360, 1, 115, 25, "Solubility")
+                                    button5 = Button(320, 115, 170, 25, "Condensation")
+
+                                    def1 = pygame.image.load("L2D1.png")
+                                    def2 = pygame.image.load("L2D2.png")
+                                    def3 = pygame.image.load("L2D3.png")
+                                    def4 = pygame.image.load("L2D4.png")
+                                    def5 = pygame.image.load("L2D5.png")
+
+                                    def ma():
+                                        running = True
+                                        while running:
+
+                                            for event in pygame.event.get():
+                                                if event.type == pygame.QUIT:
+                                                    pygame.quit()
+                                                    sys.exit()
+                                                if event.type == KEYDOWN:
+                                                    if event.key == K_ESCAPE:
+                                                        running = False
+                                                        main()
+
+                                                if button1.is_clicked(event):
+                                                    screen.blit(def1, (0, 0))
+                                                if button2.is_clicked(event):
+                                                    screen.blit(def2, (0, 0))
+                                                if button3.is_clicked(event):
+                                                    screen.blit(def3, (0, 0))
+                                                if button4.is_clicked(event):
+                                                    screen.blit(def4, (0, 0))
+                                                if button5.is_clicked(event):
+                                                    screen.blit(def5, (0, 0))
+
+                                            button1.draw(screen)
+                                            button2.draw(screen)
+                                            button3.draw(screen)
+                                            button4.draw(screen)
+                                            button5.draw(screen)
+                                            pygame.display.flip()
+
+                                    if __name__ == "__main__":
+                                        ma()
+
+                                def Level_3():
+                                    # Create a button instance
+                                    button1 = Button(20, 115, 140, 25, "Exothermic")
+                                    button2 = Button(40, 1, 100, 25, "Ketone")
+                                    button3 = Button(180, 1, 100, 25, "Ligand")
+                                    button4 = Button(320, 1, 160, 25, "Radioactivity")
+                                    button5 = Button(280, 115, 210, 25, "Thermodynamics")
+
+                                    def1 = pygame.image.load("L3D1.png")
+                                    def2 = pygame.image.load("L3D2.png")
+                                    def3 = pygame.image.load("L3D3.png")
+                                    def4 = pygame.image.load("L3D4.png")
+                                    def5 = pygame.image.load("L3D5.png")
+
+                                    def mai():
+                                        running = True
+                                        while running:
+
+                                            for event in pygame.event.get():
+                                                if event.type == pygame.QUIT:
+                                                    pygame.quit()
+                                                    sys.exit()
+                                                if event.type == KEYDOWN:
+                                                    if event.key == K_ESCAPE:
+                                                        running = False
+                                                        main()
+
+                                                if button1.is_clicked(event):
+                                                    screen.blit(def1, (0, 0))
+                                                if button2.is_clicked(event):
+                                                    screen.blit(def2, (0, 0))
+                                                if button3.is_clicked(event):
+                                                    screen.blit(def3, (0, 0))
+                                                if button4.is_clicked(event):
+                                                    screen.blit(def4, (0, 0))
+                                                if button5.is_clicked(event):
+                                                    screen.blit(def5, (0, 0))
+
+                                            button1.draw(screen)
+                                            button2.draw(screen)
+                                            button3.draw(screen)
+                                            button4.draw(screen)
+                                            button5.draw(screen)
+                                            pygame.display.flip()
+
+                                    if __name__ == "__main__":
+                                        mai()
+
+                                if button1.is_clicked(event):
+                                    Level_1()
+                                if button2.is_clicked(event):
+                                    Level_2()
+                                if button3.is_clicked(event):
+                                    Level_3()
+
+                            button1.draw(screen)
+                            button2.draw(screen)
+                            button3.draw(screen)
+                            pygame.display.flip()
+                    if __name__ == "__main__":
+                        main()
+
+            button1.draw(screen)
+            button2.draw(screen)
+            button3.draw(screen)
+            button4.draw(screen)
+            pygame.display.flip()
+
+    if __name__ == "__main__":
+        main()
+
+main_menu()
