@@ -306,7 +306,7 @@ def level_1():
                 enemy_x = random.randint(50, 240)
                 enemy_y = random.randint(150, 499)
                 enemy = Enemy(enemy_x, enemy_y, 40, 40, letters_imgs[words[word_index][len(collected_letters)]])
-     
+
         redrawGameWindow()
 
 
@@ -896,7 +896,7 @@ def level_3():
                                     pygame.quit()
                                     sys.exit()
                                 if event.type == KEYDOWN and event.key == K_ESCAPE:
-                                    return  # Exit pop-up display on ESC key
+                                    return  # Exit pop-up display o                     n ESC key
 
                     show_pop_up_for_seconds(L, 2)
                     level_select()
@@ -904,20 +904,127 @@ def level_3():
     pygame.quit()
 
 def scroll():
-    running = True
-    while running:
-        bg = pygame.image.load("Missions Background.png")
-        screen.blit(bg, (0, 0))
-        pygame.display.flip()
+    bg = pygame.image.load("Missions Background.png")
+    text_font = pygame.font.Font("PressStart2P-vaV7.ttf", 50)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+    # Define a function to draw text
+    def draw_text(text, font, text_col, x, y):
+        img = font.render(text, True, text_col)
+        screen.blit(img, (x, y))
+
+    # Define the Button class
+    class Button:
+        def __init__(self, x, y, width, height, text):
+            self.rect = pygame.Rect(x, y, width, height)
+            self.color = (200, 200, 200)  # Gray color
+            self.text = text
+            self.font = pygame.font.Font(None, 36)
+
+        def draw(self, screen):
+            pygame.draw.rect(screen, self.color, self.rect)
+            text_surface = self.font.render(self.text, True, (0, 0, 0))  # Black color for text
+            text_rect = text_surface.get_rect(center=self.rect.center)
+            screen.blit(text_surface, text_rect)
+
+        def is_clicked(self, event):
+            if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(event.pos):
+                return True
+            return False
+
+    # Main function
+    def main():
+        # Initialize values
+        Life = 1
+        Money = 1
+        Skin = 1
+        Clues = 1
+
+        # Create button instances
+        button1 = Button(160, 230, 50, 25, "Add")
+        button2 = Button(160, 355, 50, 25, "Add")
+        button3 = Button(160, 470, 50, 25, "Add")
+        button4 = Button(160, 590, 50, 25, "Add")
+
+        # Create button instances
+        button_1 = Button(160, 200, 50, 25, "Sub")
+        button_2 = Button(160, 325, 50, 25, "Sub")
+        button_3 = Button(160, 440, 50, 25, "Sub")
+        button_4 = Button(160, 560, 50, 25, "Sub")
+
+        running = True
+        while running:
+            # Handle events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
                     running = False
-                    main_menu()  # Return to the main menu
+                    # main_menu()  # Assuming you have a main_menu function defined
+
+                if button1.is_clicked(event):
+                    Life += 1
+                    if Life >= 5:
+                        Life = 5
+                if button2.is_clicked(event):
+                    Money += 1
+                    if Money >= 5:
+                        Money = 5
+                if button3.is_clicked(event):
+                    Skin += 1
+                    if Skin >= 5:
+                        Skin = 5
+                if button4.is_clicked(event):
+                    Clues += 1
+                    if Clues >= 5:
+                        Clues = 5
+
+                if button_1.is_clicked(event):
+                    Life -= 1
+                    if Life <= 1:
+                        Life = 1
+                if button_2.is_clicked(event):
+                    Money -= 1
+                    if Money <= 1:
+                        Money = 1
+                if button_3.is_clicked(event):
+                    Skin -= 1
+                    if Skin <= 1:
+                        Skin = 1
+                if button_4.is_clicked(event):
+                    Clues -= 1
+                    if Clues <= 1:
+                        Clues = 1
+
+            # Draw background
+            screen.blit(bg, (0, 0))
+
+            # Draw buttons
+            button1.draw(screen)
+            button2.draw(screen)
+            button3.draw(screen)
+            button4.draw(screen)
+
+            button_1.draw(screen)
+            button_2.draw(screen)
+            button_3.draw(screen)
+            button_4.draw(screen)
+
+
+            # Draw text
+            draw_text(f"{Life}", text_font, (0, 0, 0), 290, 203)  # Black color for text
+            draw_text(f"{Money}", text_font, (0, 0, 0), 290, 330)
+            draw_text(f"{Skin}", text_font, (0, 0, 0), 290, 445)
+            draw_text(f"{Clues}", text_font, (0, 0, 0), 290, 560)
+
+            # Update display
+            pygame.display.flip()
+
+    # Entry point of the program
+    if __name__ == "__main__":
+        main()
+
+
 def settings():
     running = True
     while running:
@@ -1067,6 +1174,10 @@ def level_select():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
+                        main_menu()  # Return to the main menu
 
                 if button1.is_clicked(event):
                     level_1()
