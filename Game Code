@@ -1,4 +1,4 @@
-import pygame,sys,random,time
+import pygame, sys, random, time, math
 
 mainClock = pygame.time.Clock()
 from pygame.locals import *
@@ -13,6 +13,15 @@ volume = 1.0
 screen = pygame.display.set_mode((500, 700))
 pygame.display.set_caption("Image Button Example")
 bg = pygame.image.load("Snake Ig Background (1).png")
+
+def play_background_music():
+    pygame.mixer.init()
+    pygame.mixer.music.load('chill music.mp3')
+    pygame.mixer.music.play(loops=-1)
+
+
+def stop_background_music():
+    pygame.mixer.music.stop()
 
 def show_pop_up_for_seconds(img, seconds):
     start_time = time.time()
@@ -32,9 +41,16 @@ def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
 def main_menu():
+    play_background_music()
     click = False
+    start_time = time.time()
     while True:
         screen.blit(bg, (0, 0))  # Redraw the main menu background
+
+        current_time = time.time()
+        amplitude = 15
+        period = 3  # seconds for a full cycle
+        y_offset = math.sin((current_time - start_time) * 2 * math.pi / period) * amplitude
 
         draw_text("Mis", text_font, (0, 0, 0), 418, 275)
         draw_text("Set", text_font, (0, 0, 0), 425, 60)
@@ -47,7 +63,7 @@ def main_menu():
         button_3_img = pygame.image.load("Settings.png")  # Load your image for button 3
         button_4_img = pygame.image.load("Menu.png")  # Load your image for button 4
 
-        button_1_rect = button_1_img.get_rect(topleft=(100, 450))  # Set the position of button 1
+        button_1_rect = button_1_img.get_rect(topleft=(100, 450+ y_offset))  # Set the position of button 1
         button_2_rect = button_2_img.get_rect(topleft=(425, 200))  # Set the position of button 2
         button_3_rect = button_3_img.get_rect(topleft=(425, 3))  # Set the position of button 3
         button_4_rect = button_4_img.get_rect(topleft=(25, 2))  # Set the position of button 4
@@ -56,6 +72,14 @@ def main_menu():
         screen.blit(button_2_img, button_2_rect)
         screen.blit(button_3_img, button_3_rect)
         screen.blit(button_4_img, button_4_rect)
+
+        microscope_img = pygame.image.load("Microscope (2).png")  # Load your image for button 1
+        microscope_img_rect = microscope_img.get_rect(topleft=(100, 300 + y_offset))
+        screen.blit(microscope_img, microscope_img_rect)
+
+        float_img = pygame.image.load("flt image(2).png")  # Load your image for button 1
+        float_img_rect = microscope_img.get_rect(topleft=(350, 300 + y_offset))
+        screen.blit(float_img, float_img_rect)
 
         click = False
         for event in pygame.event.get():
